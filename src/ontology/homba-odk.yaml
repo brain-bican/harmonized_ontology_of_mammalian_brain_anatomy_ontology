@@ -1,0 +1,36 @@
+id: homba
+title: Harmonized Ontology of Mammalian Brain Anatomy
+github_org: Cellular-Semantics
+git_main_branch: main
+repo: harmonized_ontology_of_mammalian_brain_anatomy_ontology
+uribase: https://purl.brain-bican.org/ontology
+use_dosdps: TRUE
+
+export_formats:
+  - owl
+  - obo
+  - json
+
+release_artefacts:
+  - base
+  - simple-non-classified
+  - full
+  - simple
+
+primary_release: full
+
+import_group:
+  use_base_merging: TRUE
+  slme_individuals: exclude
+  products:
+    - id: uberon
+      use_base: TRUE
+    - id: ncbitaxon
+      mirror_from: http://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl
+
+components:
+  products:
+    - filename: all_templates.owl
+
+documentation:
+  documentation_system: mkdocs

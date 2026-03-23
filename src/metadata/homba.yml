@@ -1,0 +1,27 @@
+# PURL configuration for http://purl.obolibrary.org/obo/homba
+
+idspace: HOMBA
+base_url: /obo/homba
+
+products:
+- homba.owl: https://raw.githubusercontent.com/Cellular-Semantics/harmonized_ontology_of_mammalian_brain_anatomy_ontology/main/homba.owl
+- homba.obo: https://raw.githubusercontent.com/Cellular-Semantics/harmonized_ontology_of_mammalian_brain_anatomy_ontology/main/homba.obo
+
+term_browser: ontobee
+example_terms:
+- HOMBA_0000000
+
+entries:
+
+- prefix: /releases/
+  replacement: https://raw.githubusercontent.com/Cellular-Semantics/harmonized_ontology_of_mammalian_brain_anatomy_ontology/v
+
+- prefix: /tracker/
+  replacement: https://github.com/Cellular-Semantics/harmonized_ontology_of_mammalian_brain_anatomy_ontology/issues
+
+- prefix: /about/
+  replacement: http://www.ontobee.org/ontology/HOMBA?iri=http://purl.obolibrary.org/obo/
+
+## generic fall-through, serve direct from github by default
+- prefix: /
+  replacement: https://raw.githubusercontent.com/Cellular-Semantics/harmonized_ontology_of_mammalian_brain_anatomy_ontology/main/
