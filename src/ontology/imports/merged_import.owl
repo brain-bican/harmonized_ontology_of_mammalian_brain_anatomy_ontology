@@ -1,12 +1,18 @@
-Prefix(:=<https://purl.brain-bican.org/ontology/homba/imports/merged_import.owl>)
-Prefix(obo:=<http://purl.obolibrary.org/obo/>)
+Prefix(:=<https://purl.brain-bican.org/ontology/homba/imports/merged_import.owl#>)
 Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
 Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
 Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
 Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
 Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
-Prefix(oboInOwl:=<http://www.geneontology.org/formats/oboInOwl#>)
+
 
 Ontology(<https://purl.brain-bican.org/ontology/homba/imports/merged_import.owl>
-# This is a placeholder, it will be regenerated when makefile is first executed.
+<https://purl.brain-bican.org/ontology/homba/releases/2026-03-23/imports/merged_import.owl>
+Annotation(owl:versionInfo "2026-03-23")
+
+Declaration(ObjectProperty(<http://purl.obolibrary.org/obo/BFO_0000050>))
+Declaration(AnnotationProperty(<http://purl.org/dc/terms/license>))
+
+
+
 )
