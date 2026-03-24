@@ -11,10 +11,11 @@ Prefix(dcterms:=<http://purl.org/dc/terms/>)
 Ontology(<https://purl.brain-bican.org/ontology/homba.owl>
 
 Import(<https://purl.brain-bican.org/ontology/homba/imports/merged_import.owl>)
+Import(<https://purl.brain-bican.org/ontology/homba/components/all_templates.owl>)
 
 
 Import(<https://purl.brain-bican.org/ontology/homba/patterns/definitions.owl>)
-Annotation(dcterms:description "None")
+Annotation(dcterms:description "An application ontology built by combining the HOMBA structure graph, curated Uberon mappings, generated linkouts, and standard ODK-managed releases.")
 Annotation(dcterms:license <https://creativecommons.org/licenses/unspecified>)
 Annotation(dcterms:title "Harmonized Ontology of Mammalian Brain Anatomy")
 

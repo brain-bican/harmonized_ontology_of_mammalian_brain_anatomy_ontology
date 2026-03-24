@@ -1,0 +1,51 @@
+id: http://purl.obolibrary.org/obo/ABA_Uberon
+name: structure_graph
+prefixes:
+  UBERON: 'http://purl.obolibrary.org/obo/UBERON_'
+  IAO: 'http://purl.obolibrary.org/obo/IAO_'
+
+default_curi_maps:
+- semweb_context
+- obo_context
+
+types:
+  string:
+    base: str
+    uri: xsd:string
+
+classes:
+  Class:
+    slots:
+      - id
+      - name
+      - acronym
+      - symbol
+      - parent_structure_id
+      - subclass_of
+    class_uri: owl:Class
+
+slots:
+  id:
+    identifier: true
+  name:
+    slot_uri: rdfs:label
+    annotations:
+      owl: AnnotationAssertion
+  acronym:
+    slot_uri: oboInOwl:hasExactSynonym
+    annotations:
+      owl: AnnotationAssertion
+  symbol:
+    slot_uri: IAO:0000028
+    annotations:
+      owl: AnnotationAssertion
+  parent_structure_id:
+    slot_uri: BFO:0000050
+    range: Class
+    annotations:
+      owl: SubClassOf, ObjectSomeValuesFrom
+  subclass_of:
+    slot_uri: rdfs:subclass_of
+    range: Class
+    annotations:
+      owl: SubClassOf
