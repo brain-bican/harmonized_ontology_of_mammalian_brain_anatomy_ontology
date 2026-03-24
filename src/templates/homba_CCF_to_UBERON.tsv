@@ -1,0 +1,2 @@
+ID	Label	Subclass part of	Equivalent	SuperClass Label	Status	Approved by		
+ID	A IAO:0000589	SC 'part of' some % and ('part of' some NCBITaxon:40674)	EC % and ('part of' some NCBITaxon:40674)	>A rdfs:label	A oboInOwl:status	>A oboInOwl:source

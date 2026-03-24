@@ -22,6 +22,15 @@ primary_release: full
 import_group:
   use_base_merging: TRUE
   slme_individuals: exclude
+  exclude_iri_patterns:
+    - <http://www.informatics.jax.org/marker/MGI:*>
+    - <http://purl.obolibrary.org/obo/OBA_*>
+    - <http://purl.obolibrary.org/obo/ENVO_*>
+    - <http://purl.obolibrary.org/obo/OBI_*>
+    - <http://purl.obolibrary.org/obo/GOCHE_*>
+    - <http://purl.obolibrary.org/obo/CARO_*>
+    - <http://purl.obolibrary.org/obo/NCBITaxon_Union_*>
+    - <http://www.genenames.org/cgi-bin/gene_symbol_report*>
   products:
     - id: uberon
       use_base: TRUE
