@@ -1,17 +1,20 @@
 site_name: Harmonized Ontology of Mammalian Brain Anatomy
+
 theme:
   name: material
   features:
     - content.tabs.link
+
 plugins:
   - search
-  #- table-reader (see https://github.com/INCATools/ontology-development-kit/issues/1028)
+  # - table-reader
+
 markdown_extensions:
-  - pymdownx.highlight:
+  - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - pymdownx.tabbed:
+  - pymdownx.tabbed
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
@@ -36,9 +39,8 @@ nav:
           - Managing the documentation: odk-workflows/ManageDocumentation.md
           - Managing your automated testing: odk-workflows/ManageAutomatedTest.md
           - Continuous Integration: odk-workflows/ContinuousIntegration.md
-          - Your ODK Repository Overview: odk-workflows/RepositoryFileStructure.md 
+          - Your ODK Repository Overview: odk-workflows/RepositoryFileStructure.md
       - Contributing: contributing.md
-- Reference:
-    - Design Patterns:
-      - Design Patterns Overview: templates/dosdp.md
-
+  - Reference:
+      - Design Patterns:
+          - Design Patterns Overview: templates/dosdp.md
