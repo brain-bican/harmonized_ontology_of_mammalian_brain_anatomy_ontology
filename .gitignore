@@ -70,3 +70,8 @@ src/patterns/all_pattern_terms.txt
 
 __pycache__/
 *.pyc
+src/linkml/data/*.tsv
+src/ontology/components/linkouts.owl
+src/ontology/components/sources_merged.owl
+src/ontology/sources/HOMBA_v1.json
+src/ontology/sources/uberon-bridge-to-homba.owl
