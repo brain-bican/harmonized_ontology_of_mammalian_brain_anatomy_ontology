@@ -36,6 +36,8 @@ import_group:
       use_base: TRUE
     - id: ncbitaxon
       mirror_from: http://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl
+    - id: ro
+      use_base: TRUE
 
 components:
   products:
