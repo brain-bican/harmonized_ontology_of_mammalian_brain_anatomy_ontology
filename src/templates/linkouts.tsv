@@ -32,6 +32,7 @@ http://purl.obolibrary.org/obo/NCBITaxon_9526		Catarrhini
 http://purl.obolibrary.org/obo/NCBITaxon_9604		Hominidae
 http://purl.obolibrary.org/obo/NCBITaxon_9605		Homo
 http://purl.obolibrary.org/obo/NCBITaxon_9606		Homo sapiens
+http://purl.obolibrary.org/obo/RO_0002577		system
 http://purl.obolibrary.org/obo/UBERON_0000000		processual entity
 http://purl.obolibrary.org/obo/UBERON_0000005		chemosensory organ
 http://purl.obolibrary.org/obo/UBERON_0000006		islet of Langerhans
@@ -128,6 +129,7 @@ http://purl.obolibrary.org/obo/UBERON_0000202		glial blood brain barrier
 http://purl.obolibrary.org/obo/UBERON_0000203		pallium
 http://purl.obolibrary.org/obo/UBERON_0000204		ventral part of telencephalon
 http://purl.obolibrary.org/obo/UBERON_0000209		tetrapod frontal bone
+http://purl.obolibrary.org/obo/UBERON_0000219		vertebral foramen of atlas
 http://purl.obolibrary.org/obo/UBERON_0000220		atlanto-occipital joint
 http://purl.obolibrary.org/obo/UBERON_0000304		tendon sheath
 http://purl.obolibrary.org/obo/UBERON_0000307		blastula
@@ -276,6 +278,7 @@ http://purl.obolibrary.org/obo/UBERON_0001113		lobe of liver
 http://purl.obolibrary.org/obo/UBERON_0001114		right lobe of liver
 http://purl.obolibrary.org/obo/UBERON_0001115		left lobe of liver
 http://purl.obolibrary.org/obo/UBERON_0001130		vertebral column
+http://purl.obolibrary.org/obo/UBERON_0001131		vertebral foramen
 http://purl.obolibrary.org/obo/UBERON_0001133		cardiac muscle tissue
 http://purl.obolibrary.org/obo/UBERON_0001134		skeletal muscle tissue
 http://purl.obolibrary.org/obo/UBERON_0001135		smooth muscle tissue
@@ -382,6 +385,7 @@ http://purl.obolibrary.org/obo/UBERON_0001607		sphincter pupillae
 http://purl.obolibrary.org/obo/UBERON_0001608		dilatator pupillae
 http://purl.obolibrary.org/obo/UBERON_0001610		lingual artery
 http://purl.obolibrary.org/obo/UBERON_0001612		facial artery
+http://purl.obolibrary.org/obo/UBERON_0001616		maxillary artery
 http://purl.obolibrary.org/obo/UBERON_0001619		ophthalmic artery
 http://purl.obolibrary.org/obo/UBERON_0001628		posterior communicating artery
 http://purl.obolibrary.org/obo/UBERON_0001630		muscle organ
@@ -1330,6 +1334,7 @@ http://purl.obolibrary.org/obo/UBERON_0003665		post-anal tail muscle
 http://purl.obolibrary.org/obo/UBERON_0003684		abdominal cavity
 http://purl.obolibrary.org/obo/UBERON_0003685		cranial suture
 http://purl.obolibrary.org/obo/UBERON_0003687		foramen magnum
+http://purl.obolibrary.org/obo/UBERON_0003691		epidural space
 http://purl.obolibrary.org/obo/UBERON_0003694		atlanto-axial joint
 http://purl.obolibrary.org/obo/UBERON_0003697		abdominal wall
 http://purl.obolibrary.org/obo/UBERON_0003703		extrahepatic bile duct
@@ -1999,6 +2004,7 @@ http://purl.obolibrary.org/obo/UBERON_0006670		central tendon of diaphragm
 http://purl.obolibrary.org/obo/UBERON_0006677		surface of epithelium
 http://purl.obolibrary.org/obo/UBERON_0006682		hypoglossal canal
 http://purl.obolibrary.org/obo/UBERON_0006686		spinal vein
+http://purl.obolibrary.org/obo/UBERON_0006692		vertebral canal
 http://purl.obolibrary.org/obo/UBERON_0006694		cerebellum vasculature
 http://purl.obolibrary.org/obo/UBERON_0006695		mammillary axonal complex
 http://purl.obolibrary.org/obo/UBERON_0006696		mammillothalamic axonal tract
@@ -2215,6 +2221,8 @@ http://purl.obolibrary.org/obo/UBERON_0008339		microvascular endothelium
 http://purl.obolibrary.org/obo/UBERON_0008342		intestinal villus of duodenum
 http://purl.obolibrary.org/obo/UBERON_0008346		duodenal epithelium
 http://purl.obolibrary.org/obo/UBERON_0008397		tracheobronchial epithelium
+http://purl.obolibrary.org/obo/UBERON_0008429		cervical vertebral foramen
+http://purl.obolibrary.org/obo/UBERON_0008432		thoracic vertebral foramen
 http://purl.obolibrary.org/obo/UBERON_0008780		inner cell mass derived epiblast
 http://purl.obolibrary.org/obo/UBERON_0008814		pharyngeal arch system
 http://purl.obolibrary.org/obo/UBERON_0008816		embryonic head

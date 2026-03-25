@@ -97,7 +97,7 @@ mirror-uberon: | $(TMPDIR)
 
 ## Disable '--equivalent-classes-allowed asserted-only' due to bridge-level equivalence patterns
 .PHONY: reason_test
-reason_test: $(EDIT_PREPROCESSED)
+reason_test: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(IMPORT_FILES)
 	$(ROBOT) reason --input $< --reasoner ELK \
 		--exclude-tautologies structural --output test.owl && rm test.owl
 
