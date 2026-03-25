@@ -10,7 +10,7 @@
 # More information: https://github.com/INCATools/ontology-development-kit/
 
 # Fingerprint of the configuration file when this Makefile was last generated
-CONFIG_HASH=                060d8114e11b02f80f42c16a79882cd9108022dca46e59dbd0cf8346276196ae
+CONFIG_HASH=                7d6669d6b7ebf4d9f07b06f376a5f1347b096ddf2609e3ba4bb9619a817b9548
 
 
 # ----------------------------------------
@@ -192,7 +192,7 @@ all_main: $(MAIN_FILES)
 # ----------------------------------------
 
 
-IMPORTS =  uberon ncbitaxon
+IMPORTS =  uberon ncbitaxon ro
 
 IMPORT_ROOTS =  $(IMPORTDIR)/merged_import
 IMPORT_OWL_FILES = $(foreach n,$(IMPORT_ROOTS), $(n).owl)
@@ -409,6 +409,14 @@ ALL_TERMS = $(foreach imp, $(IMPORTS), $(IMPORTDIR)/$(imp)_terms.txt)
 $(IMPORTDIR)/merged_import.owl: $(MIRRORDIR)/merged.owl $(ALL_TERMS) \
 				$(IMPORTSEED) | all_robot_plugins
 	$(ROBOT) merge --input $< \
+		 remove --select "<http://www.informatics.jax.org/marker/MGI:*>" \
+		 remove --select "<http://purl.obolibrary.org/obo/OBA_*>" \
+		 remove --select "<http://purl.obolibrary.org/obo/ENVO_*>" \
+		 remove --select "<http://purl.obolibrary.org/obo/OBI_*>" \
+		 remove --select "<http://purl.obolibrary.org/obo/GOCHE_*>" \
+		 remove --select "<http://purl.obolibrary.org/obo/CARO_*>" \
+		 remove --select "<http://purl.obolibrary.org/obo/NCBITaxon_Union_*>" \
+		 remove --select "<http://www.genenames.org/cgi-bin/gene_symbol_report*>" \
 		 extract $(foreach f, $(ALL_TERMS), --term-file $(f)) $(T_IMPORTSEED) \
 		         --force true --copy-ontology-annotations false \
 		         --individuals exclude \
@@ -505,6 +513,14 @@ mirror-uberon: | $(TMPDIR)
 .PRECIOUS: $(MIRRORDIR)/ncbitaxon.owl
 mirror-ncbitaxon: | $(TMPDIR)
 	$(ROBOT) convert -I http://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl -o $(TMPDIR)/$@.owl
+
+
+## ONTOLOGY: ro
+.PHONY: mirror-ro
+.PRECIOUS: $(MIRRORDIR)/ro.owl
+mirror-ro: | $(TMPDIR)
+	curl -L $(OBOBASE)/ro/ro-base.owl --create-dirs -o $(TMPDIR)/ro-download.owl --retry 4 --max-time 200 && \
+	$(ROBOT) convert -i $(TMPDIR)/ro-download.owl -o $(TMPDIR)/$@.owl
 
 ALL_MIRRORS = $(patsubst %, $(MIRRORDIR)/%.owl, $(IMPORTS))
 MERGE_MIRRORS = true

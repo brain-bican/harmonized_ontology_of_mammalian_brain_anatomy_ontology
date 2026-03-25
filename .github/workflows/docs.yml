@@ -1,7 +1,6 @@
 # Basic ODK workflow
 name: Docs
-permissions:
-  contents: write
+
 # Controls when the action will run. 
 on:
   # Allows you to run this workflow manually from the Actions tab
