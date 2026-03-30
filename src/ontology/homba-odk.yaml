@@ -38,6 +38,10 @@ import_group:
       mirror_from: http://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl
     - id: ro
       use_base: TRUE
+    - id: bfo
+      mirror_from: http://purl.obolibrary.org/obo/bfo.owl
+    - id: iao
+      mirror_from: http://purl.obolibrary.org/obo/iao.owl
 
 components:
   products:
