@@ -1,4 +1,13 @@
 homba:
   species: mammalian
   prefix: https://purl.brain-bican.org/ontology/HOMBA_
-  atlases: []
+  dhba_prefix: https://purl.brain-bican.org/ontology/dhbao/DHBA_
+  atlases:
+    - id: 138322605
+      name: Human, 34 years, Cortex - Gyral
+    - id: 265297126
+      name: Human, 34 years, Cortex - Mod. Brodmann
+    - id: 3
+      name: Human, 21 pcw
+    - id: 138322603
+      name: 287730656

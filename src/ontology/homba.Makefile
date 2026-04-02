@@ -82,6 +82,7 @@ $(TMPDIR)/tmp.json: $(TMPDIR)/tmp.owl
 
 $(TEMPLATEDIR)/linkouts.tsv: $(TMPDIR)/tmp.json
 	python3 $(SCRIPTSDIR)/gen_linkout_template.py $<
+	python3 $(SCRIPTSDIR)/validate_linkout_template.py $(TEMPLATEDIR)/linkouts.tsv
 
 $(COMPONENTSDIR)/linkouts.owl: $(TMPDIR)/tmp.owl $(TEMPLATEDIR)/linkouts.tsv
 	$(ROBOT) template --template $(word 2, $^) --input $< --add-prefixes template_prefixes.json -o $@

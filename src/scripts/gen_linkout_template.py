@@ -1,9 +1,76 @@
 import argparse
+import csv
 import json
+from pathlib import Path
 from string import Template
 
-import pandas as pd
-from ruamel.yaml import YAML
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+CONFIG_PATH = SCRIPT_DIR.parent / "config" / "db_graph_atlas.yaml"
+OUTPUT_PATH = SCRIPT_DIR.parent / "templates" / "linkouts.tsv"
+ATLAS_LINK = Template("http://atlas.brain-map.org/atlas?atlas=$atlas_id#structure=$structure_id")
+
+
+def is_local_homba_term(node_id, prefix):
+    return prefix and str(node_id).startswith(prefix) and not str(node_id).endswith("_ENTITY")
+
+
+def is_numeric_homba_id(local_id):
+    # Numeric HOMBA accessions correspond to DHBA terms; AA accessions are HOMBA-only groupings.
+    return str(local_id).isdigit()
+
+
+def parse_scalar(value):
+    value = value.strip()
+    if value.startswith(("'", '"')) and value.endswith(("'", '"')):
+        return value[1:-1]
+    return value
+
+
+def load_simple_yaml(path):
+    config = {}
+    current_section = None
+    current_atlas = None
+
+    for raw_line in path.read_text().splitlines():
+        if not raw_line.strip() or raw_line.lstrip().startswith("#"):
+            continue
+
+        indent = len(raw_line) - len(raw_line.lstrip(" "))
+        stripped = raw_line.strip()
+
+        if indent == 0 and stripped.endswith(":"):
+            current_section = stripped[:-1]
+            config[current_section] = {"atlases": []}
+            current_atlas = None
+            continue
+
+        if current_section is None:
+            continue
+
+        if indent == 2 and stripped.endswith(":"):
+            continue
+
+        if indent == 2 and ":" in stripped:
+            key, value = stripped.split(":", 1)
+            config[current_section][key.strip()] = parse_scalar(value)
+            continue
+
+        if indent == 4 and stripped.startswith("-"):
+            current_atlas = {}
+            config[current_section]["atlases"].append(current_atlas)
+            remainder = stripped[1:].strip()
+            if remainder:
+                key, value = remainder.split(":", 1)
+                current_atlas[key.strip()] = parse_scalar(value)
+            continue
+
+        if indent == 6 and ":" in stripped and current_atlas is not None:
+            key, value = stripped.split(":", 1)
+            current_atlas[key.strip()] = parse_scalar(value)
+
+    return config
+
 
 parser = argparse.ArgumentParser(description="Generate HOMBA linkout template.")
 parser.add_argument("filepath", help="Path to the json version of the ontology")
@@ -13,14 +80,12 @@ with open(args.filepath, "r") as f:
     ontology_json = json.loads(f.read())
 
 graph = ontology_json["graphs"][0]
-with open("../config/db_graph_atlas.yaml", "r") as conf:
-    mapping = YAML(typ="safe").load(conf.read()) or {}
-
-link = Template("http://atlas.brain-map.org/atlas?atlas=$atlas_id#structure=$structure_id")
+mapping = load_simple_yaml(CONFIG_PATH)
 
 seed = {
     "ID": "ID",
-    "xref": "A OboInOwl:hasDbXref",
+    "dhba_xref": "A OboInOwl:hasDbXref",
+    "atlas_link": "A rdfs:seeAlso",
     "prefLabel": "A skos:prefLabel",
 }
 
@@ -30,29 +95,47 @@ for node in graph["nodes"]:
     if node.get("type") != "CLASS" or "lbl" not in node:
         continue
 
-    matched = False
+    node_id = str(node["id"])
+    pref_label = node["lbl"]
+    tab.append({"ID": node_id, "dhba_xref": "", "atlas_link": "", "prefLabel": pref_label})
+
     for _, cfg in mapping.items():
         prefix = cfg.get("prefix")
-        if prefix and str(node["id"]).startswith(prefix) and not str(node["id"]).endswith("_ENTITY"):
-            atlases = cfg.get("atlases", [])
-            if atlases:
-                for atlas in atlases:
-                    tab.append(
-                        {
-                            "ID": node["id"],
-                            "xref": link.substitute(
-                                atlas_id=atlas["id"],
-                                structure_id=str(node["id"]).rsplit("_", 1)[-1],
-                            ),
-                            "prefLabel": "{} ({})".format(node["lbl"], cfg["species"]),
-                        }
-                    )
-            else:
-                tab.append({"ID": node["id"], "xref": "", "prefLabel": node["lbl"]})
-            matched = True
+        if not is_local_homba_term(node_id, prefix):
+            continue
+
+        local_id = node_id.rsplit("_", 1)[-1]
+        if not is_numeric_homba_id(local_id):
             break
 
-    if not matched:
-        tab.append({"ID": node["id"], "xref": "", "prefLabel": node["lbl"]})
+        dhba_prefix = cfg.get("dhba_prefix", "")
+        if dhba_prefix:
+            tab.append(
+                {
+                    "ID": node_id,
+                    "dhba_xref": dhba_prefix + local_id,
+                    "atlas_link": "",
+                    "prefLabel": "",
+                }
+            )
 
-pd.DataFrame.from_records(tab).to_csv("../templates/linkouts.tsv", sep="\t", index=False)
+        for atlas in cfg.get("atlases", []):
+            tab.append(
+                {
+                    "ID": node_id,
+                    "dhba_xref": "",
+                    "atlas_link": ATLAS_LINK.substitute(atlas_id=atlas["id"], structure_id=local_id),
+                    "prefLabel": "",
+                }
+            )
+        break
+
+with open(OUTPUT_PATH, "w", newline="") as handle:
+    writer = csv.DictWriter(
+        handle,
+        fieldnames=["ID", "dhba_xref", "atlas_link", "prefLabel"],
+        delimiter="\t",
+        lineterminator="\n",
+    )
+    writer.writeheader()
+    writer.writerows(tab)
