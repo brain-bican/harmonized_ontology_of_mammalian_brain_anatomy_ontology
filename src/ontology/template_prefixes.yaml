@@ -1,3 +1,4 @@
 UBERON: http://purl.obolibrary.org/obo/UBERON_
 OboInOwl: http://www.geneontology.org/formats/oboInOwl#
 HOMBA: https://purl.brain-bican.org/ontology/HOMBA_
+rdfs: http://www.w3.org/2000/01/rdf-schema#
