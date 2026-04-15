@@ -102,6 +102,8 @@ reason_test: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(IMPORT_FILES)
 	$(ROBOT) reason --input $< --reasoner ELK \
 		--exclude-tautologies structural --output test.owl && rm test.owl
 
+BFO_SUPERCLASS_FILTER = query --update ../sparql/remove-bfo-inferred-superclasses.ru
+
 ## Disable '--equivalent-classes-allowed asserted-only' for the base release
 ## because HOMBA currently contains inferred equivalent classes.
 $(ONT)-base.owl: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(IMPORT_FILES)
@@ -110,6 +112,7 @@ $(ONT)-base.owl: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(IMPORT_FILES)
 	relax $(RELAX_OPTIONS) \
 	reduce -r $(REASONER) $(REDUCE_OPTIONS) \
 	remove --base-iri $(URIBASE)/HOMBA --axioms external --preserve-structure false --trim false \
+	$(BFO_SUPERCLASS_FILTER) \
 	$(SHARED_ROBOT_COMMANDS) \
 	annotate --link-annotation http://purl.org/dc/elements/1.1/type http://purl.obolibrary.org/obo/IAO_8000001 \
 		--ontology-iri $(ONTBASE)/$@ $(ANNOTATE_ONTOLOGY_VERSION) \
@@ -120,6 +123,7 @@ $(ONT)-full.owl: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(IMPORT_FILES)
 		reason --reasoner ELK --exclude-tautologies structural \
 		relax \
 		reduce -r ELK \
+		$(BFO_SUPERCLASS_FILTER) \
 		$(SHARED_ROBOT_COMMANDS) annotate --ontology-iri $(ONTBASE)/$@ $(ANNOTATE_ONTOLOGY_VERSION) --output $@.tmp.owl && mv $@.tmp.owl $@
 
 $(ONT)-simple.owl: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(SIMPLESEED) $(IMPORT_FILES)
@@ -130,7 +134,16 @@ $(ONT)-simple.owl: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(SIMPLESEED) $(IMPORT_FILE
 		relax \
 		filter --term-file $(SIMPLESEED) --select "annotations ontology anonymous self" --trim true --signature true \
 		reduce -r ELK \
+		$(BFO_SUPERCLASS_FILTER) \
 		query --update ../sparql/inject-subset-declaration.ru --update ../sparql/inject-synonymtype-declaration.ru \
+		$(SHARED_ROBOT_COMMANDS) annotate --ontology-iri $(ONTBASE)/$@ $(ANNOTATE_ONTOLOGY_VERSION) --output $@.tmp.owl && mv $@.tmp.owl $@
+
+$(ONT)-simple-non-classified.owl: $(EDIT_PREPROCESSED) $(OTHER_SRC) $(SIMPLESEED) $(IMPORT_FILES)
+	$(ROBOT_RELEASE_IMPORT_MODE_BASE) \
+		remove --axioms equivalent \
+		reduce -r $(REASONER) $(REDUCE_OPTIONS) \
+		filter --select ontology --term-file $(SIMPLESEED) --trim false \
+		$(BFO_SUPERCLASS_FILTER) \
 		$(SHARED_ROBOT_COMMANDS) annotate --ontology-iri $(ONTBASE)/$@ $(ANNOTATE_ONTOLOGY_VERSION) --output $@.tmp.owl && mv $@.tmp.owl $@
 
 $(ONT).owl: $(ONT)-full.owl
