@@ -86,6 +86,7 @@ seed = {
     "ID": "ID",
     "dhba_xref": "A OboInOwl:hasDbXref",
     "atlas_link": "A rdfs:seeAlso",
+    "atlas_link_label": ">A rdfs:label",
     "prefLabel": "A skos:prefLabel",
 }
 
@@ -97,7 +98,7 @@ for node in graph["nodes"]:
 
     node_id = str(node["id"])
     pref_label = node["lbl"]
-    tab.append({"ID": node_id, "dhba_xref": "", "atlas_link": "", "prefLabel": pref_label})
+    tab.append({"ID": node_id, "dhba_xref": "", "atlas_link": "", "atlas_link_label": "", "prefLabel": pref_label})
 
     for _, cfg in mapping.items():
         prefix = cfg.get("prefix")
@@ -115,6 +116,7 @@ for node in graph["nodes"]:
                     "ID": node_id,
                     "dhba_xref": dhba_prefix + local_id,
                     "atlas_link": "",
+                    "atlas_link_label": "",
                     "prefLabel": "",
                 }
             )
@@ -125,6 +127,7 @@ for node in graph["nodes"]:
                     "ID": node_id,
                     "dhba_xref": "",
                     "atlas_link": ATLAS_LINK.substitute(atlas_id=atlas["id"], structure_id=local_id),
+                    "atlas_link_label": atlas.get("name", ""),
                     "prefLabel": "",
                 }
             )
@@ -133,7 +136,7 @@ for node in graph["nodes"]:
 with open(OUTPUT_PATH, "w", newline="") as handle:
     writer = csv.DictWriter(
         handle,
-        fieldnames=["ID", "dhba_xref", "atlas_link", "prefLabel"],
+        fieldnames=["ID", "dhba_xref", "atlas_link", "atlas_link_label", "prefLabel"],
         delimiter="\t",
         lineterminator="\n",
     )
