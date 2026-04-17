@@ -74,9 +74,10 @@ homba_cfg = config.get("homba", {})
 homba_prefix = homba_cfg.get("prefix", "")
 dhba_prefix = homba_cfg.get("dhba_prefix", "")
 atlas_ids = [str(atlas["id"]) for atlas in homba_cfg.get("atlases", [])]
+atlas_names = [atlas.get("name", "") for atlas in homba_cfg.get("atlases", [])]
 expected_atlas_count = len(atlas_ids)
 
-stats = defaultdict(lambda: {"dhba_xrefs": [], "atlas_links": []})
+stats = defaultdict(lambda: {"dhba_xrefs": [], "atlas_links": [], "atlas_link_labels": []})
 
 with open(args.template, "r", newline="") as handle:
     reader = csv.DictReader(handle, delimiter="\t")
@@ -91,12 +92,15 @@ with open(args.template, "r", newline="") as handle:
             stats[node_id]["dhba_xrefs"].append(row["dhba_xref"])
         if row["atlas_link"]:
             stats[node_id]["atlas_links"].append(row["atlas_link"])
+            stats[node_id]["atlas_link_labels"].append(row.get("atlas_link_label", ""))
 
         if not is_numeric_homba_id(local_id):
             if row["dhba_xref"]:
                 raise ValueError(f"AA HOMBA term unexpectedly received a DHBA xref: {node_id}")
             if row["atlas_link"]:
                 raise ValueError(f"AA HOMBA term unexpectedly received an atlas link: {node_id}")
+            if row.get("atlas_link_label"):
+                raise ValueError(f"AA HOMBA term unexpectedly received an atlas link label: {node_id}")
 
 for node_id, values in stats.items():
     local_id = node_id.rsplit("_", 1)[-1]
@@ -118,8 +122,13 @@ for node_id, values in stats.items():
             f"{node_id} should have {expected_atlas_count} atlas links {expected_links}, "
             f"found {values['atlas_links']}"
         )
+    if values["atlas_link_labels"] != atlas_names:
+        raise ValueError(
+            f"{node_id} should have atlas link labels {atlas_names}, "
+            f"found {values['atlas_link_labels']}"
+        )
 
 print(
     f"Validated HOMBA linkouts for {len(stats)} HOMBA classes; "
-    f"numeric terms carry one DHBA xref and {expected_atlas_count} atlas links."
+    f"numeric terms carry one DHBA xref and {expected_atlas_count} labeled atlas links."
 )
