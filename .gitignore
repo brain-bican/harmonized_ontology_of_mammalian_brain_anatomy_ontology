@@ -73,5 +73,6 @@ __pycache__/
 src/linkml/data/*.tsv
 src/ontology/components/linkouts.owl
 src/ontology/components/sources_merged.owl
+src/ontology/sources/*.ofn
 src/ontology/sources/HOMBA_v1.json
 src/ontology/sources/uberon-bridge-to-homba.owl

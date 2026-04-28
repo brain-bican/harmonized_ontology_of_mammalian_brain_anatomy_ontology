@@ -1,10 +1,7 @@
 import json
-import ntpath
 
 
-NAMESPACES = {
-    "HOMBA_v1.json": "https://purl.brain-bican.org/ontology/HOMBA_",
-}
+DEFAULT_NAMESPACE = "https://purl.brain-bican.org/ontology/HOMBA_"
 
 
 def _curie_to_iri(curie, namespace):
@@ -12,12 +9,11 @@ def _curie_to_iri(curie, namespace):
     return namespace + local_id
 
 
-def read_structure_graph(graph_json):
+def read_structure_graph(graph_json, namespace=DEFAULT_NAMESPACE):
     with open(graph_json, "r") as f:
         payload = json.loads(f.read())
 
     data_list = []
-    namespace = NAMESPACES[ntpath.basename(graph_json)]
 
     if isinstance(payload, dict) and "msg" in payload:
         for root in payload["msg"]:

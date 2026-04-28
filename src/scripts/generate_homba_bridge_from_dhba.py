@@ -26,6 +26,7 @@ DHBA_CLASS_PREFIX = "https://purl.brain-bican.org/ontology/dhbao/DHBA_"
 HOMBA_CLASS_PREFIX = "https://purl.brain-bican.org/ontology/HOMBA_"
 ONTOLOGY_IRI = "http://purl.obolibrary.org/obo/uberon/bridge/uberon-bridge-to-homba.owl"
 VERSION_IRI = "http://purl.obolibrary.org/obo/uberon/releases/2025-12-04/bridge/uberon-bridge-to-homba.owl"
+DEFAULT_HOMBA_JSON = Path(__file__).resolve().parent.parent / "ontology" / "tmp" / "HOMBA.json"
 
 
 def collect_numeric_homba_ids(homba_json_path: Path) -> set[str]:
@@ -115,8 +116,8 @@ def main():
     )
     parser.add_argument(
         "--homba-json",
-        default="HOMBA_v1.json",
-        help="Path to HOMBA_v1.json.",
+        default=str(DEFAULT_HOMBA_JSON),
+        help="Path to the local HOMBA structure graph JSON.",
     )
     parser.add_argument(
         "--output",
