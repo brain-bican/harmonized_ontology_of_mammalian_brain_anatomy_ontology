@@ -1,7 +1,7 @@
 import argparse
 import logging
 import os
-import urllib.request
+from pathlib import Path
 
 from relation_validator import read_csv_to_dict
 from structure_graph_utils import read_structure_graph
@@ -9,8 +9,7 @@ from abc import ABC, abstractmethod, ABCMeta
 
 MAPPING_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../templates/homba_CCF_to_UBERON.tsv")
 PATH_REPORT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../validation_report.txt")
-STRUCTURE_GRAPH_URL = "https://allen-hmba-releases.s3.us-west-2.amazonaws.com/terminology/HOMBA_v1.json"
-STRUCTURE_GRAPH_FILE = "HOMBA_v1.json"
+DEFAULT_STRUCTURE_GRAPH = Path(__file__).resolve().parent.parent / "ontology" / "tmp" / "HOMBA.json"
 
 log = logging.getLogger(__name__)
 
@@ -86,12 +85,12 @@ class UniqueIdChecker(StrictChecker):
 
 
 class StructureGraphChecker(StrictChecker):
-    def __init__(self):
+    def __init__(self, structure_graph_path):
         self.reports = []
+        self.structure_graph_path = structure_graph_path
 
     def check(self):
-        urllib.request.urlretrieve(STRUCTURE_GRAPH_URL, STRUCTURE_GRAPH_FILE)
-        structure_graph_list = read_structure_graph(STRUCTURE_GRAPH_FILE)
+        structure_graph_list = read_structure_graph(self.structure_graph_path)
         structure_graph = {item["id"]: item for item in structure_graph_list}
 
         headers, records = read_csv_to_dict(MAPPING_FILE, delimiter="\t", generated_ids=True)
@@ -118,9 +117,14 @@ class StructureGraphChecker(StrictChecker):
 
 
 class MappingValidator(object):
-    rules = [SingleMappingChecker(), UniqueIdChecker(), StructureGraphChecker()]
-    errors = []
-    warnings = []
+    def __init__(self, structure_graph_path):
+        self.rules = [
+            SingleMappingChecker(),
+            UniqueIdChecker(),
+            StructureGraphChecker(structure_graph_path),
+        ]
+        self.errors = []
+        self.warnings = []
 
     def validate(self):
         for checker in self.rules:
@@ -141,9 +145,9 @@ class ValidationError(Exception):
         self.report = report
 
 
-def main(silent):
+def main(silent, structure_graph):
     log.info("Mapping validation started.")
-    validator = MappingValidator()
+    validator = MappingValidator(structure_graph)
     validator.validate()
     if not validator.errors and not validator.warnings:
         print("\nMarker validation successful.")
@@ -168,5 +172,10 @@ def main(silent):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--silent", action="store_true")
+    parser.add_argument(
+        "--structure-graph",
+        default=str(DEFAULT_STRUCTURE_GRAPH),
+        help="Path to the local HOMBA structure graph JSON.",
+    )
     args = parser.parse_args()
-    main(args.silent)
+    main(args.silent, args.structure_graph)

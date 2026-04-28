@@ -5,14 +5,19 @@
 
 URIBASE = https://purl.brain-bican.org/ontology
 
-JOBS = HOMBA_v1
+# Update this single URL when switching HOMBA structure graph versions.
+HOMBA_DOWNLOAD_URL ?= https://alleninstitute.github.io/CCF-MAP/_downloads/4ebd4f47528d60cd67ecb4571019bf69/HOMBA_v1.1.0.json
+HOMBA_JSON = $(TMPDIR)/HOMBA.json
+
+JOBS = HOMBA
 BRIDGES = homba
 TARGETS = homba
 
 LINKML = linkml-data2owl
 
-STRUCTURE_GRAPHS = $(patsubst %, sources/%.json, $(JOBS))
-ALL_GRAPH_ONTOLOGIES = $(patsubst sources/%.json,sources/%.ofn,$(STRUCTURE_GRAPHS))
+STRUCTURE_GRAPHS = $(HOMBA_JSON)
+HOMBA_TEMPLATE = ../linkml/data/HOMBA.tsv
+ALL_GRAPH_ONTOLOGIES = sources/HOMBA.ofn
 ALL_BRIDGES = $(patsubst %, sources/uberon-bridge-to-%.owl, $(BRIDGES))
 # Keep the template-regenerated bridge workflow disabled until HOMBA has a
 # manually curated mapping table to compare against the legacy bridge.
@@ -30,7 +35,7 @@ dependencies:
 	python3 -m pip install --break-system-packages -r ../../requirements.txt
 
 
-LOCAL_CLEAN_FILES = $(ALL_GRAPH_ONTOLOGIES) $(ALL_BRIDGES) $(TMPDIR)/tmp.json $(TMPDIR)/tmp.owl $(COMPONENTSDIR)/sources_merged.owl $(COMPONENTSDIR)/linkouts.owl $(TEMPLATEDIR)/linkouts.tsv
+LOCAL_CLEAN_FILES = $(HOMBA_JSON) $(ALL_GRAPH_ONTOLOGIES) $(ALL_BRIDGES) $(TMPDIR)/tmp.json $(TMPDIR)/tmp.owl $(COMPONENTSDIR)/sources_merged.owl $(COMPONENTSDIR)/linkouts.owl $(TEMPLATEDIR)/linkouts.tsv
 # Template-regenerated bridge artifacts to restore later if HOMBA gets a curated mapping workflow:
 # LOCAL_CLEAN_FILES += $(SOURCE_TEMPLATES) $(NEW_BRIDGES)
 
@@ -38,18 +43,19 @@ LOCAL_CLEAN_FILES = $(ALL_GRAPH_ONTOLOGIES) $(ALL_BRIDGES) $(TMPDIR)/tmp.json $(
 clean_files:
 	rm -f $(LOCAL_CLEAN_FILES)
 
-sources/HOMBA_v1.json:
+$(HOMBA_JSON):
 	mkdir -p $(dir $@)
-	curl -L -o $@ "https://allen-hmba-releases.s3.us-west-2.amazonaws.com/terminology/HOMBA_v1.json"
+	curl -L -o $@ "$(HOMBA_DOWNLOAD_URL)"
 
-../linkml/data/template_%.tsv: sources/%.json
+$(HOMBA_TEMPLATE): $(HOMBA_JSON)
 	mkdir -p $(dir $@)
 	python3 $(SCRIPTSDIR)/structure_graph_template.py -i $< -o $@
-.PRECIOUS: ../linkml/data/template_%.tsv
+.PRECIOUS: $(HOMBA_TEMPLATE)
 
-sources/%.ofn: ../linkml/data/template_%.tsv
+sources/HOMBA.ofn: $(HOMBA_TEMPLATE)
+	mkdir -p $(dir $@)
 	$(LINKML) -C Class -s ../linkml/structure_graph_schema.yaml $< -o $@
-.PRECIOUS: sources/%.ofn
+.PRECIOUS: sources/HOMBA.ofn
 
 sources/uberon-bridge-to-homba.owl:
 	mkdir -p $(dir $@)
